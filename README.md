@@ -1,11 +1,6 @@
 # Kubernetes challenge
-
-Deploy this application to [Minikube](https://github.com/kubernetes/minikube) and customise the environment variable to display your name.
-
-```
-$ curl $(minikube ip)
-Hello Dan!
-```
+Challenge reference: 
+https://github.com/learnk8s/kubernetes-challenge
 
 ## Instructions
 
@@ -25,3 +20,51 @@ You can expose Minikube's Docker daemon with:
 ```shell
 $ eval (minkube docker-env)
 ```
+
+---
+
+## Files
+
+- [deployment.yml](deployment.yml)
+- [service.yml](service.yml)
+- [configmap.yml](configmap.yml)
+- [ingress.yml](ingress.yml)
+
+---
+
+## Scripts
+
+```shell
+# Building docker image
+docker build --tag kubchallenge --file Dockerfile .
+docker tag kubchallenge:latest smiguelnet/kubchallenge:1.0.0
+docker push smiguelnet/kubchallenge:1.0.0
+
+# Testing docker image
+docker run -d -p 4000:8080 --name kubchallenge smiguelnet/kubchallenge:1.0.0
+# *** REMOVE IT AFTER TESTING ***
+# docker stop kubchallenge
+# docker rm kubchallenge
+
+# Deployment
+kubectl apply -f deployment.yml
+
+# Service
+kubectl apply -f service.yml
+
+# Config Map
+kubectl apply -f configmap.yml
+
+# Ingress (Nginx)
+kubectl apply -f ingress.yml
+```
+
+Additional commands available on [script.sh](script.sh)
+
+---
+
+## Notes
+To utilize the Load Balancer and test it locally (e.g. https://localhost:8080), use the minikube tunnel:
+```shell
+minikube tunnel
+``` 

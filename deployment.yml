@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubchallenge-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kubchallenge
+  template:
+    metadata:
+      labels:
+        app: kubchallenge
+    spec:
+      containers:
+      - name: kubchallenge-container
+        image: smiguelnet/kubchallenge:1.0.0
+        ports:
+        - containerPort: 4000
+        resources:
+          limits: 
+            cpu: '0.5'
+            memory: 100Mi
+        env:
+          - name: NAME
+            valueFrom:
+              configMapKeyRef:
+                name: kubchallenge-configmap
+                key: NAME
